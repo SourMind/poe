@@ -1,0 +1,289 @@
+Public Class FRM_MANTENEDOR_PRODUCTOS
+
+    Private Sub BTN_ACEPTAR_Click(sender As Object, e As EventArgs) Handles BTN_ACEPTAR.Click
+        Dim Indice As Integer
+        Dim Item, ID, NOMBRE, PRECIO, STOCK_REAL, STOCK_CRITICO As String
+        Dim Existe As Boolean
+
+        If BTN_ACEPTAR.Text = "&Aceptar" Then
+            'Validar si se ha ingresado un valor en TXT_ID
+            If Me.TXT_ID.Text = "" Then
+                MsgBox("ID no puede estar vacio", MsgBoxStyle.Critical, "ERROR")
+                Me.TXT_ID.Focus()
+            End If
+            'validar si ya existe el ID del producto en LST_PRODUCTOS
+            If LST_PRODUCTOS.Items.Count > 0 Then
+                Existe = False
+                For Indice = 0 To LST_PRODUCTOS.Items.Count - 1
+                    Item = LST_PRODUCTOS.Items.Item(Indice)
+                    ID = Item.Substring(0, 5).Trim
+                    If TXT_ID.Text = ID Then
+                        Existe = True
+                        Exit For
+                    End If
+                Next
+
+                If Existe Then
+                    MsgBox("Error, ya existe el producto con ID: " & TXT_ID.Text)
+                    TXT_ID.Select()
+                    TXT_ID.SelectAll()
+                    Exit Sub
+                End If
+            End If
+            'Me.AcceptButton = Nothing
+            BTN_ACEPTAR.Text = "&Grabar"
+            BTN_LIMPIAR.Enabled = True
+            TXT_ID.Enabled = False
+            TXT_NOMBRE.Enabled = True
+            TXT_PRECIO.Enabled = True
+            NUM_STOCK_REAL.Enabled = True
+            NUM_STOCK_CRITICO.Enabled = True
+            BTN_CANCELAR.Enabled = True
+            TXT_NOMBRE.Select()
+        Else
+            'Guardar datos en LST_PRODUCTOS
+            If TXT_NOMBRE.Text = "" Then
+                MsgBox("Error, debe ingresar un nombre")
+                TXT_NOMBRE.Focus()
+                Exit Sub
+            End If
+            ID = TXT_ID.Text.PadRight(5)
+            NOMBRE = TXT_NOMBRE.Text.PadRight(30)
+            PRECIO = TXT_PRECIO.Text.PadLeft(10)
+            STOCK_REAL = NUM_STOCK_REAL.Value.ToString.PadLeft(10)
+            STOCK_CRITICO = NUM_STOCK_CRITICO.Value.ToString.PadLeft(10)
+            'If Me.Text = "Nuevo Producto" Then
+            LST_PRODUCTOS.Items.Add(ID & " " & NOMBRE & " " & PRECIO & " " & STOCK_REAL & " " & STOCK_CRITICO)
+            TXT_ID.Text = ""
+            TXT_NOMBRE.Text = ""
+            TXT_PRECIO.Text = ""
+            NUM_STOCK_REAL.Value = 0
+            NUM_STOCK_CRITICO.Value = 0
+            TXT_ID.Enabled = True
+            TXT_NOMBRE.Enabled = False
+            TXT_PRECIO.Enabled = False
+            NUM_STOCK_REAL.Enabled = False
+            NUM_STOCK_CRITICO.Enabled = False
+            BTN_ACEPTAR.Enabled = True
+            BTN_LIMPIAR.Enabled = False
+            BTN_ACEPTAR.Text = "&Aceptar"
+            Me.AcceptButton = BTN_ACEPTAR
+            BTN_LIMPIAR.Enabled = True
+            LST_PRODUCTOS.Enabled = True
+            TXT_ID.Select()
+            'End If
+        End If
+    End Sub
+
+    Private Sub BTN_CANCELAR_Click(sender As Object, e As EventArgs) Handles BTN_CANCELAR.Click
+        Dim respuesta As String
+        Me.Text = "&Volver"
+        respuesta = MsgBox("¿Seguro que desea cancelar?", MsgBoxStyle.YesNo, "comprobar")
+        If respuesta = 6 Then
+            Me.TXT_ID.Text = ""
+            Me.TXT_NOMBRE.Text = ""
+            Me.TXT_PRECIO.Text = ""
+            Me.NUM_STOCK_REAL.Value = 0
+            Me.NUM_STOCK_CRITICO.Value = 0
+            BTN_CANCELAR.Enabled = False
+            TXT_ID.Enabled = False
+            TXT_NOMBRE.Enabled = False
+            TXT_PRECIO.Enabled = False
+            NUM_STOCK_REAL.Enabled = False
+            NUM_STOCK_CRITICO.Enabled = False
+            BTN_ACEPTAR.Enabled = False
+            BTN_CANCELAR.Enabled = False
+            BTN_NUEVO.Enabled = True
+            BTN_MODIFICAR.Enabled = True
+            BTN_LIMPIAR.Enabled = True
+            BTN_ACEPTAR.Text = "&Aceptar"
+            Me.AcceptButton = BTN_ACEPTAR
+            LST_PRODUCTOS.Enabled = True
+            BTN_NUEVO.Select()
+        End If
+    End Sub
+    'Colores
+    Private Sub TXT_ID_GotFocus(sender As Object, e As EventArgs) Handles TXT_ID.GotFocus
+        LBL_ID.ForeColor = Color.Red
+        TXT_ID.BackColor = Color.Yellow
+    End Sub
+
+    Private Sub TXT_ID_LostFocus(sender As Object, e As EventArgs) Handles TXT_ID.LostFocus
+        LBL_ID.ForeColor = Color.Black
+        TXT_ID.BackColor = Color.White
+    End Sub
+
+    Private Sub TXT_NOMBRE_GotFocus(sender As Object, e As EventArgs) Handles TXT_NOMBRE.GotFocus
+        LBL_NOMBRE.ForeColor = Color.Red
+        TXT_NOMBRE.BackColor = Color.Yellow
+    End Sub
+
+    Private Sub TXT_NOMBRE_LostFocus(sender As Object, e As EventArgs) Handles TXT_NOMBRE.LostFocus
+        LBL_NOMBRE.ForeColor = Color.Black
+        TXT_NOMBRE.BackColor = Color.White
+    End Sub
+
+    Private Sub TXT_PRECIO_GotFocus(sender As Object, e As EventArgs) Handles TXT_PRECIO.GotFocus
+        LBL_PRECIO.ForeColor = Color.Red
+        TXT_PRECIO.BackColor = Color.Yellow
+    End Sub
+
+    Private Sub TXT_PRECIO_LostFocus(sender As Object, e As EventArgs) Handles TXT_PRECIO.LostFocus
+        LBL_PRECIO.ForeColor = Color.Black
+        TXT_PRECIO.BackColor = Color.White
+    End Sub
+
+    Private Sub NUM_STOCK_CRITICO_GotFocus(sender As Object, e As EventArgs) Handles NUM_STOCK_CRITICO.GotFocus
+        LBL_STOCK_CRITICO.ForeColor = Color.Red
+        NUM_STOCK_CRITICO.BackColor = Color.Yellow
+    End Sub
+
+    Private Sub NUM_STOCK_CRITICO_LostFocus(sender As Object, e As EventArgs) Handles NUM_STOCK_CRITICO.LostFocus
+        LBL_STOCK_CRITICO.ForeColor = Color.Black
+        NUM_STOCK_CRITICO.BackColor = Color.White
+    End Sub
+
+    Private Sub NUM_STOCK_REAL_GotFocus(sender As Object, e As EventArgs) Handles NUM_STOCK_REAL.GotFocus
+        LBL_STOCK_REAL.ForeColor = Color.Red
+        NUM_STOCK_REAL.BackColor = Color.Yellow
+    End Sub
+
+    Private Sub NUM_STOCK_REAL_LostFocus(sender As Object, e As EventArgs) Handles NUM_STOCK_REAL.LostFocus
+        LBL_STOCK_REAL.ForeColor = Color.Black
+        NUM_STOCK_REAL.BackColor = Color.White
+    End Sub
+    'End Colores
+    Private Sub TXT_ID_KeyPress(sender As Object, e As KeyPressEventArgs) Handles TXT_ID.KeyPress
+        If (e.KeyChar < "0" Or e.KeyChar > "9") And Not Asc(e.KeyChar) = 8 Then
+            e.KeyChar = ""
+        End If
+    End Sub
+
+    Private Sub BTN_NUEVO_Click(sender As Object, e As EventArgs) Handles BTN_NUEVO.Click
+        Me.Text = "Nuevo Producto"
+        Me.TXT_ID.Text = ""
+        Me.TXT_NOMBRE.Text = ""
+        Me.TXT_PRECIO.Text = ""
+        Me.NUM_STOCK_REAL.Value = 0
+        Me.NUM_STOCK_CRITICO.Value = 0
+        TXT_ID.Enabled = True
+        BTN_ACEPTAR.Enabled = True
+        BTN_CANCELAR.Enabled = True
+        Me.TXT_ID.Focus()
+        BTN_NUEVO.Enabled = False
+        BTN_MODIFICAR.Enabled = False
+        BTN_ELIMINAR.Enabled = False
+    End Sub
+
+    Private Sub BTN_LIMPIAR_Click(sender As Object, e As EventArgs) Handles BTN_LIMPIAR.Click
+        TXT_NOMBRE.Text = ""
+        TXT_PRECIO.Text = ""
+        NUM_STOCK_REAL.Value = 0
+        NUM_STOCK_CRITICO.Value = 0
+        TXT_ID.Enabled = True
+        TXT_NOMBRE.Enabled = False
+        TXT_PRECIO.Enabled = False
+        NUM_STOCK_REAL.Enabled = False
+        NUM_STOCK_CRITICO.Enabled = False
+        BTN_ACEPTAR.Text = "&Aceptar"
+        BTN_LIMPIAR.Enabled = False
+        TXT_ID.Select()
+        TXT_ID.SelectAll()
+    End Sub
+
+    Private Sub LST_PRODUCTOS_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LST_PRODUCTOS.SelectedIndexChanged
+        Dim Item As String
+        Dim indice As Integer
+        If LST_PRODUCTOS.SelectedIndex >= 0 Then
+            indice = LST_PRODUCTOS.SelectedIndex
+            Item = LST_PRODUCTOS.Items.Item(indice)
+            TXT_ID.Text = Item.Substring(0, 5).Trim
+            TXT_NOMBRE.Text = Item.Substring(6, 30).Trim
+            TXT_PRECIO.Text = Item.Substring(37, 10).Trim
+            NUM_STOCK_REAL.Value = Val(Item.Substring(48, 10))
+            NUM_STOCK_CRITICO.Value = Val(Item.Substring(59, 10))
+            BTN_ELIMINAR.Enabled = True
+            BTN_MODIFICAR.Enabled = True
+        End If
+    End Sub
+
+    Private Sub BTN_MODIFICAR_Click(sender As Object, e As EventArgs) Handles BTN_MODIFICAR.Click
+        Dim indice As Integer = LST_PRODUCTOS.SelectedIndex
+        If LST_PRODUCTOS.SelectedIndex = -1 Or TXT_ID.Text = "" Then
+            MsgBox("Debe seleccionar un producto para modificar")
+            Exit Sub
+        End If
+        Me.Text = "Modificar Productos"
+        LST_PRODUCTOS.Enabled = False
+        BTN_ACEPTAR.Text = "&Grabar"
+        BTN_NUEVO.Enabled = False
+        BTN_MODIFICAR.Enabled = False
+        BTN_ELIMINAR.Enabled = False
+        TXT_NOMBRE.Enabled = True
+        TXT_PRECIO.Enabled = True
+        NUM_STOCK_CRITICO.Enabled = True
+        NUM_STOCK_REAL.Enabled = True
+        BTN_ACEPTAR.Enabled = True
+        BTN_CANCELAR.Enabled = True
+        TXT_NOMBRE.SelectAll()
+
+        'LST_PRODUCTOS.Items.RemoveAt(indice)
+        'LST_PRODUCTOS.Items.Insert(indice, TXT_NOMBRE)
+
+    End Sub
+
+    Private Sub BTN_ELIMINAR_Click(sender As Object, e As EventArgs) Handles BTN_ELIMINAR.Click
+        Dim resp As Integer
+        resp = MsgBox("¿Esta seguro que desea eliminar?", MsgBoxStyle.YesNo, "Comprobar")
+        If resp = 6 Then
+            LST_PRODUCTOS.Items.RemoveAt(LST_PRODUCTOS.SelectedIndex())
+        End If
+
+    End Sub
+
+    Private Sub BTN_SALIR_Click(sender As Object, e As EventArgs) Handles BTN_SALIR.Click
+        Dim rutaFichero As New System.IO.StreamWriter("C:\Users\Guille\Desktop\PRUEBAboton.TXT", True)
+        Dim i As Integer
+        Dim Registro, ID, Nombre, Precio, Stock_real, Stock_critic, Item As String
+        For i = 0 To LST_PRODUCTOS.Items.Count - 1
+            Item = LST_PRODUCTOS.Items.Item(i)
+            ID = Item.Substring(0, 5).Trim
+            Nombre = Item.Substring(6, 30).Trim
+            Precio = Item.Substring(37, 10).Trim
+            Stock_real = Val(Item.Substring(48, 10))
+            Stock_critic = Val(Item.Substring(59, 10))
+            rutaFichero.Write(ID & ";" & Nombre & ";" & Precio & ";" & Stock_real & ";" & Stock_critic & vbCrLf)
+        Next
+        rutaFichero.Close()
+        Me.Close()
+    End Sub
+
+    Private Sub TXT_PRECIO_KeyPress(sender As Object, e As KeyPressEventArgs) Handles TXT_PRECIO.KeyPress
+        If (e.KeyChar < "0" Or e.KeyChar > "9") And Not Asc(e.KeyChar) = 8 Then
+            e.KeyChar = ""
+        End If
+    End Sub
+
+    Private Sub TXT_NOMBRE_KeyPress(sender As Object, e As KeyPressEventArgs) Handles TXT_NOMBRE.KeyPress
+        If (e.KeyChar < "0" Or e.KeyChar > "9") And (e.KeyChar < "a" Or e.KeyChar > "z") And (e.KeyChar < "A" Or e.KeyChar > "Z") And Not Asc(e.KeyChar) = 8 And Not Asc(e.KeyChar) = 32 Then
+            e.KeyChar = ""
+        End If
+    End Sub
+
+    Private Sub FRM_MANTENEDOR_PRODUCTOS_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim ARCHIVO As New System.IO.StreamReader("C:\Users\Guille\Desktop\PRUEBA.TXT")
+        Dim Registro, Elementos(), ID, Nombre, Precio, Stock_real, Stock_critic As String
+        Registro = ARCHIVO.ReadLine()
+        While Registro <> ""
+            Elementos = Split(Registro, ";")
+            ID = Elementos(0).PadRight(5)
+            Nombre = Elementos(1).PadRight(30)
+            Precio = Elementos(2).PadRight(10)
+            Stock_critic = Elementos(3).PadRight(10)
+            Stock_real = Elementos(4).PadRight(10)
+            LST_PRODUCTOS.Items.Add(ID & " " & Nombre & " " & Precio & " " & Stock_real & " " & Stock_critic)
+            Registro = ARCHIVO.ReadLine()
+        End While
+        ARCHIVO.Close()
+    End Sub
+End Class
